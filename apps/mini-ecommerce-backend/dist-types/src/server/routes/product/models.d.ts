@@ -1,0 +1,191 @@
+import z from "zod";
+export declare const categoryModel: z.ZodObject<{
+    id: z.ZodNumber;
+    name: z.ZodString;
+}, z.core.$strip>;
+export declare const brandModel: z.ZodObject<{
+    id: z.ZodNumber;
+    name: z.ZodString;
+}, z.core.$strip>;
+export declare const tagModel: z.ZodObject<{
+    id: z.ZodNumber;
+    name: z.ZodString;
+}, z.core.$strip>;
+export declare const reviewModel: z.ZodObject<{
+    id: z.ZodNumber;
+    rating: z.ZodNumber;
+    comment: z.ZodString;
+    createdAt: z.ZodDate;
+    reviewerName: z.ZodString;
+    reviewerEmail: z.ZodString;
+}, z.core.$strip>;
+export declare const productModel: z.ZodObject<{
+    id: z.ZodNumber;
+    title: z.ZodString;
+    description: z.ZodString;
+    price: z.ZodNumber;
+    discountPercentage: z.ZodNullable<z.ZodNumber>;
+    rating: z.ZodNullable<z.ZodNumber>;
+    stock: z.ZodNumber;
+    sku: z.ZodNullable<z.ZodString>;
+    weight: z.ZodNullable<z.ZodNumber>;
+    dimensions: z.ZodNullable<z.ZodUnknown>;
+    warrantyInformation: z.ZodNullable<z.ZodString>;
+    shippingInformation: z.ZodNullable<z.ZodString>;
+    availabilityStatus: z.ZodNullable<z.ZodString>;
+    returnPolicy: z.ZodNullable<z.ZodString>;
+    minimumOrderQuantity: z.ZodNullable<z.ZodNumber>;
+    meta: z.ZodNullable<z.ZodUnknown>;
+    images: z.ZodNullable<z.ZodArray<z.ZodString>>;
+    thumbnail: z.ZodNullable<z.ZodString>;
+    categoryId: z.ZodNumber;
+    brandId: z.ZodNullable<z.ZodNumber>;
+    category: z.ZodNullable<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodString;
+    }, z.core.$strip>>;
+    brand: z.ZodNullable<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodString;
+    }, z.core.$strip>>;
+    tags: z.ZodNullable<z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodString;
+    }, z.core.$strip>>>;
+    reviews: z.ZodNullable<z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        rating: z.ZodNumber;
+        comment: z.ZodString;
+        createdAt: z.ZodDate;
+        reviewerName: z.ZodString;
+        reviewerEmail: z.ZodString;
+    }, z.core.$strip>>>;
+    createdAt: z.ZodDate;
+    updatedAt: z.ZodDate;
+}, z.core.$strip>;
+export declare const productPreviewModal: z.ZodObject<{
+    id: z.ZodNumber;
+    title: z.ZodString;
+    price: z.ZodNumber;
+    discountPercentage: z.ZodNumber;
+    discountedPrice: z.ZodOptional<z.ZodNumber>;
+    thumbnail: z.ZodString;
+    stock: z.ZodNumber;
+    rating: z.ZodNumber;
+    brandName: z.ZodString;
+    tags: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodString;
+    }, z.core.$strip>>>;
+    category: z.ZodOptional<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodString;
+    }, z.core.$strip>>;
+    brand: z.ZodNullable<z.ZodOptional<z.ZodObject<{
+        id: z.ZodNumber;
+        name: z.ZodString;
+    }, z.core.$strip>>>;
+}, z.core.$strip>;
+export type ProductPreview = z.infer<typeof productPreviewModal>;
+export type Product = z.infer<typeof productModel>;
+export declare const getAllProductOutput: z.ZodObject<{
+    products: z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        title: z.ZodString;
+        price: z.ZodNumber;
+        discountPercentage: z.ZodNumber;
+        discountedPrice: z.ZodOptional<z.ZodNumber>;
+        thumbnail: z.ZodString;
+        stock: z.ZodNumber;
+        rating: z.ZodNumber;
+        brandName: z.ZodString;
+        tags: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>>;
+        category: z.ZodOptional<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>;
+        brand: z.ZodNullable<z.ZodOptional<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>>;
+    }, z.core.$strip>>;
+    meta: z.ZodObject<{
+        current_page: z.ZodNumber;
+        last_page: z.ZodNumber;
+        total: z.ZodNumber;
+    }, z.core.$strip>;
+}, z.core.$strip>;
+export declare const getSingleProductOutput: z.ZodObject<{
+    product: z.ZodObject<{
+        id: z.ZodNumber;
+        title: z.ZodString;
+        description: z.ZodString;
+        price: z.ZodNumber;
+        discountPercentage: z.ZodNullable<z.ZodNumber>;
+        rating: z.ZodNullable<z.ZodNumber>;
+        stock: z.ZodNumber;
+        sku: z.ZodNullable<z.ZodString>;
+        weight: z.ZodNullable<z.ZodNumber>;
+        dimensions: z.ZodNullable<z.ZodUnknown>;
+        warrantyInformation: z.ZodNullable<z.ZodString>;
+        shippingInformation: z.ZodNullable<z.ZodString>;
+        availabilityStatus: z.ZodNullable<z.ZodString>;
+        returnPolicy: z.ZodNullable<z.ZodString>;
+        minimumOrderQuantity: z.ZodNullable<z.ZodNumber>;
+        meta: z.ZodNullable<z.ZodUnknown>;
+        images: z.ZodNullable<z.ZodArray<z.ZodString>>;
+        thumbnail: z.ZodNullable<z.ZodString>;
+        categoryId: z.ZodNumber;
+        brandId: z.ZodNullable<z.ZodNumber>;
+        category: z.ZodNullable<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>;
+        brand: z.ZodNullable<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>;
+        tags: z.ZodNullable<z.ZodArray<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>>;
+        reviews: z.ZodNullable<z.ZodArray<z.ZodObject<{
+            id: z.ZodNumber;
+            rating: z.ZodNumber;
+            comment: z.ZodString;
+            createdAt: z.ZodDate;
+            reviewerName: z.ZodString;
+            reviewerEmail: z.ZodString;
+        }, z.core.$strip>>>;
+        createdAt: z.ZodDate;
+        updatedAt: z.ZodDate;
+    }, z.core.$strip>;
+}, z.core.$strip>;
+export declare const similarProductsOutput: z.ZodObject<{
+    products: z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        title: z.ZodString;
+        price: z.ZodNumber;
+        discountPercentage: z.ZodNumber;
+        discountedPrice: z.ZodOptional<z.ZodNumber>;
+        thumbnail: z.ZodString;
+        stock: z.ZodNumber;
+        rating: z.ZodNumber;
+        brandName: z.ZodString;
+        tags: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>>;
+        category: z.ZodOptional<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>;
+        brand: z.ZodNullable<z.ZodOptional<z.ZodObject<{
+            id: z.ZodNumber;
+            name: z.ZodString;
+        }, z.core.$strip>>>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;

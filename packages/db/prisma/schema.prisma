@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id                   Int            @id @default(autoincrement())
+  title                String
+  description          String
+  categoryId           Int
+  price                Decimal        @db.Decimal(10, 2)
+  discountPercentage   Float?
+  rating               Float?
+  stock                Int
+  brandId              Int?
+  sku                  String?
+  weight               Float?
+  dimensions           Json?
+  availabilityStatus   String?
+  returnPolicy         String?
+  meta                 Json?
+  images               String[]
+  thumbnail            String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  sellerId             Int
+  slug                 String         @unique
+  totalReviews         Int            @default(0)
+  minimumOrderQuantity Int            @default(1)
+  shippingInformation  String?
+  warrantyInformation  String?
+  cartItems            CartItem[]
+  orderItems           OrderItem[]
+  brand                Brand?         @relation(fields: [brandId], references: [id])
+  category             Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  seller               Seller         @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  tags                 ProductTag[]
+  reviews              Review[]
+  wishlistItems        WishlistItem[]
+
+  @@index([createdAt])
+  @@index([price])
+  @@index([rating])
+  @@index([categoryId])
+  @@index([sellerId])
+  @@index([brandId])
+}
+
+model Seller {
+  id        Int       @id @default(autoincrement())
+  name      String
+  logo      String?
+  rating    Float?
+  email     String    @unique
+  location  String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  slug     String    @unique
+  products Product[]
+}
+
+model User {
+  id          Int            @id @default(autoincrement())
+  name        String?
+  email       String?
+  isVerified  Boolean        @default(false)
+  role        UserRole       @default(USER)
+  phoneNumber String         @unique
+  createdAt   DateTime       @default(now())
+  cartItems   CartItem[]
+  order       Order[]
+  session     Session[]
+  wishlist    WishlistItem[]
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  refreshToken String   @unique
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Otp {
+  id          Int      @id @default(autoincrement())
+  phoneNumber String
+  otpHashed   String
+  expiresAt   DateTime
+  attempts    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([phoneNumber])
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  userId    Int?
+  productId Int
+  quantity  Int
+  guestId   String?
+  product   Product @relation(fields: [productId], references: [id])
+  user      User?   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, productId])
+  @@unique([guestId, productId])
+}
+
+model WishlistItem {
+  id        Int     @id @default(autoincrement())
+  userId    Int?
+  productId Int
+  guestId   String?
+  product   Product @relation(fields: [productId], references: [id])
+  user      User?   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, productId])
+  @@unique([guestId, productId])
+}
+
+model Tag {
+  id       Int          @id @default(autoincrement())
+  name     String       @unique
+  products ProductTag[]
+}
+
+model ProductTag {
+  productId Int
+  tagId     Int
+  product   Product @relation(fields: [productId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([productId, tagId])
+}
+
+model Review {
+  id            Int      @id @default(autoincrement())
+  rating        Int
+  comment       String
+  reviewerName  String
+  reviewerEmail String
+  createdAt     DateTime @default(now())
+  productId     Int
+  product       Product  @relation(fields: [productId], references: [id])
+}
+
+model Brand {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  logo      String?
+  slug      String    @unique
+  products  Product[]
+}
+
+model Order {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  totalAmount   Decimal       @db.Decimal(10, 2)
+  paymentStatus PaymentStatus @default(PENDING)
+  orderStatus   OrderStatus   @default(CREATED)
+  createdAt     DateTime      @default(now())
+  paymentId     String?       @unique
+  user          User          @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  orderId    Int
+  productId  Int
+  quantity   Int
+  price      Decimal @db.Decimal(10, 2)
+  cartItemId Int
+  order      Order   @relation(fields: [orderId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum OrderStatus {
+  CREATED
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}

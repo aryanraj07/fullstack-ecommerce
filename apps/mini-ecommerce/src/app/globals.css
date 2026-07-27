@@ -1,0 +1,48 @@
+@import "tailwindcss";
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --xsFontSize: 13px;
+  --normalFontSize: 14px;
+  --smFontSize: 15px;
+  --mdFontSize: 16px;
+  --lgFontSize: 17px;
+  --xlFontSize: 19px;
+  --xxlFontSize: 21px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+.primary-btn {
+  @apply px-6 py-3 bg-black text-white rounded-md  hover:bg-gray-700 transition
+}
+.secondary-btn {
+  @apply bg-white text-black rounded-lg px-3 py-2 uppercase border border-gray-300;
+}
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container-custom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.section-padding {
+  padding-top: 2rem;
+  /* padding-bottom: 2rem; */
+}

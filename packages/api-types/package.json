@@ -1,0 +1,16 @@
+{
+  "name": "@repo/api-types",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "export": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@types/node": "^26.1.1",
+    "@repo/typescript-config": "workspace:*"
+  }
+}
