@@ -7,7 +7,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "type-check": "tsc --noEmit"
+    "db:generate": "cd packages/db && npx prisma migrate && cd ../.."
   },
   "devDependencies": {
     "prettier": "^3.7.4",
