@@ -154,7 +154,7 @@ const ProductDesc = ({ product }: ProductDescProps) => {
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-4">
+        <div className="flex items-center gap-4">
           <ButtonContainer id={id} image={selectedImage!} />
           <WishlistButton id={id} image={selectedImage!} />
         </div>

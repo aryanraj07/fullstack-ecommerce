@@ -44,14 +44,22 @@ const WishlistButton = ({ id, image }: WishlistButtonProps) => {
   return (
     <button
       onClick={handleWishlist}
-      className={`flex items-center gap-2 px-6 py-2 rounded-lg border transition ${
+      className={`flex items-center gap-2 px-6 py-3 rounded-lg border transition ${
         isWishlisted
           ? "bg-gray-900 text-white"
           : "bg-white text-gray-700 border-gray-200"
       }`}
     >
-      {isWishlisted ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
-      {isWishlisted ? "Wishlisted" : "Wishlist"}
+      <span>
+        {isWishlisted ? (
+          <FaHeart className="text-red-500 text-xl" />
+        ) : (
+          <FaRegHeart />
+        )}
+      </span>
+      <span className="hidden md:flex">
+        {isWishlisted ? "Wishlisted" : "Wishlist"}
+      </span>
     </button>
   );
 };

@@ -9,7 +9,6 @@ export const orderItemSchema = z.object({
   orderId: z.number(),
   productId: z.number(),
   quantity: z.number(),
-  cartItemId: z.number(),
   price: z.number(), // Decimal -> number
   product: z.object({
     id: z.number(),
