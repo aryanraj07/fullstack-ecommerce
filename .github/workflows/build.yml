@@ -7,22 +7,22 @@ on:
 
 jobs:
   build:
-    name: Build the Project
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: "24"
+          version: 9
 
-      - name: Install Dependencies
-        run: pnpm install
-      - name: Generate Prisma Client
-        run: pnpm  db:generate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
 
-      - name: Run Build
-        run: pnpm  build
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run db:generate
+
+      - run: pnpm run build
