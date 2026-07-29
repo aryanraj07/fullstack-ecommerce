@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { TRPCProvider } from "@/utils/trpc";
 import React, { useEffect, useState } from "react";
-import type { AppRouter } from "@repo/api-types";
+import type { AppRouter } from "@repo/mini-ecommerce-backend/types";
 // This code is only for TypeScript
 
 // declare global {

@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
-import type { AppRouter } from "@repo/api-types";
+import type { AppRouter } from "@repo/mini-ecommerce-backend/types";
 export function createPublicTRPCClient() {
   return createTRPCProxyClient<AppRouter>({
     links: [

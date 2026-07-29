@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.0",
-    "@repo/api-types": "workspace:*",
+    "@repo/mini-ecommerce-backend": "workspace:*",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@trpc/client": "^11.10.0",
