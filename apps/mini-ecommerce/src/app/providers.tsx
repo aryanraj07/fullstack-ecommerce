@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { TRPCProvider } from "@/utils/trpc";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import type { AppRouter } from "@repo/mini-ecommerce-backend/types";
 // This code is only for TypeScript
 
@@ -75,6 +75,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         </Provider>
       </TRPCProvider>
       <ReactQueryDevtools initialIsOpen position="right" />
+      
     </QueryClientProvider>
   );
 }

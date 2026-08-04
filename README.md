@@ -179,7 +179,6 @@ Turbo Repo
 > Pushed it to Ec2
 
 ### Contenarising our application
-
 ### Building image for dockere file
 
 docker build -t rewamp-mini-ecommerce .
