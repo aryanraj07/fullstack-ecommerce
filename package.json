@@ -3,11 +3,13 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:frontend": "turbo run build --filter=mini-ecommerce",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "db:generate": "cd packages/db && npx prisma migrate && cd ../.."
+    "db:generate": "pnpm --filter @repo/db run generate",
+    "start-frontend-app": "cd apps/mini-ecommerce && pnpm start && cd ../.."
   },
   "devDependencies": {
     "prettier": "^3.7.4",

@@ -6,14 +6,13 @@
     "build": " tsc && tsx scripts/generate-types.ts",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/src/index.js",
-    "seed": "node prisma/seed.js",
     "types": "dist-types/types.d.ts",
     "build:types": "tsc -p tsconfig.types.json"
   },
   "exports": {
     "./types": {
-      "types": "./dist/src/types.d.ts",
-      "default": "./dist/src/types.js"
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
     }
   },
   "dependencies": {

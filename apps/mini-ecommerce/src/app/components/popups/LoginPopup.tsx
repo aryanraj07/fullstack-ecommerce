@@ -152,7 +152,6 @@ const LoginPopup = ({ open, mode, onClose, onSuccess }: LoginPopupProps) => {
             localStorage.removeItem("otpExpiry");
 
             if (mode === "modal") {
-              
               onSuccess?.();
               onClose?.();
             } else {

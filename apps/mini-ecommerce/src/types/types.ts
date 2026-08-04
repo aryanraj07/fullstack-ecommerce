@@ -1,4 +1,7 @@
-import type { RouterOutputs, RouterInputs } from "@repo/api-types";
+import type {
+  RouterOutputs,
+  RouterInputs,
+} from "@repo/mini-ecommerce-backend/types";
 
 export type User = RouterOutputs["users"]["me"];
 export type ProductsOutput = RouterOutputs["products"]["getAllProducts"];

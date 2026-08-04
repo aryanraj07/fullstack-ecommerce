@@ -1,7 +1,7 @@
 import z from "zod";
 export declare const userRoleEnum: z.ZodEnum<{
-    USER: "USER";
     ADMIN: "ADMIN";
+    USER: "USER";
 }>;
 export declare const userModel: z.ZodObject<{
     id: z.ZodNumber;
@@ -10,8 +10,8 @@ export declare const userModel: z.ZodObject<{
     phoneNumber: z.ZodString;
     isVerified: z.ZodDefault<z.ZodBoolean>;
     role: z.ZodDefault<z.ZodEnum<{
-        USER: "USER";
         ADMIN: "ADMIN";
+        USER: "USER";
     }>>;
     createdAt: z.ZodDate;
 }, z.core.$strip>;
@@ -41,8 +41,8 @@ export declare const getUser: z.ZodObject<{
         phoneNumber: z.ZodString;
         isVerified: z.ZodDefault<z.ZodBoolean>;
         role: z.ZodDefault<z.ZodEnum<{
-            USER: "USER";
             ADMIN: "ADMIN";
+            USER: "USER";
         }>>;
         createdAt: z.ZodDate;
     }, z.core.$strip>;

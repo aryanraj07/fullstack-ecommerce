@@ -113,18 +113,20 @@ app.post(
               },
             });
           }
-          await tx.cartItem.deleteMany({
-            where: {
-              userId: order.userId,
-              id: {
-                in: order.items.map((i) => i.cartItemId),
-              },
-            },
-          });
+          // await tx.cartItem.deleteMany({
+          //   where: {
+          //     userId: order.userId,
+          //     id: {
+          //       in: order.items.map((i) => i.cartItemId),
+          //     },
+          //   },
+          // });
           console.log("🛒 Stock Updated & Cart Cleared");
         });
       }
       if (event.event === "payment.failed") {
+        console.log("event value ", event);
+
         console.log("❌ Payment Failed Event Received");
       }
 

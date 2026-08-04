@@ -4,7 +4,6 @@ export declare const orderItemSchema: z.ZodObject<{
     orderId: z.ZodNumber;
     productId: z.ZodNumber;
     quantity: z.ZodNumber;
-    cartItemId: z.ZodNumber;
     price: z.ZodNumber;
     product: z.ZodObject<{
         id: z.ZodNumber;
@@ -17,17 +16,17 @@ export declare const orderSchema: z.ZodObject<{
     userId: z.ZodNumber;
     totalAmount: z.ZodNumber;
     paymentStatus: z.ZodEnum<{
+        FAILED: "FAILED";
         PENDING: "PENDING";
         SUCCESS: "SUCCESS";
-        FAILED: "FAILED";
     }>;
     paymentId: z.ZodNullable<z.ZodString>;
     orderStatus: z.ZodEnum<{
-        CREATED: "CREATED";
-        CONFIRMED: "CONFIRMED";
-        SHIPPED: "SHIPPED";
-        DELIVERED: "DELIVERED";
         CANCELLED: "CANCELLED";
+        CONFIRMED: "CONFIRMED";
+        CREATED: "CREATED";
+        DELIVERED: "DELIVERED";
+        SHIPPED: "SHIPPED";
     }>;
     createdAt: z.ZodDate;
     items: z.ZodArray<z.ZodObject<{
@@ -35,7 +34,6 @@ export declare const orderSchema: z.ZodObject<{
         orderId: z.ZodNumber;
         productId: z.ZodNumber;
         quantity: z.ZodNumber;
-        cartItemId: z.ZodNumber;
         price: z.ZodNumber;
         product: z.ZodObject<{
             id: z.ZodNumber;
@@ -49,17 +47,17 @@ export declare const myOrdersResponse: z.ZodArray<z.ZodObject<{
     userId: z.ZodNumber;
     totalAmount: z.ZodNumber;
     paymentStatus: z.ZodEnum<{
+        FAILED: "FAILED";
         PENDING: "PENDING";
         SUCCESS: "SUCCESS";
-        FAILED: "FAILED";
     }>;
     paymentId: z.ZodNullable<z.ZodString>;
     orderStatus: z.ZodEnum<{
-        CREATED: "CREATED";
-        CONFIRMED: "CONFIRMED";
-        SHIPPED: "SHIPPED";
-        DELIVERED: "DELIVERED";
         CANCELLED: "CANCELLED";
+        CONFIRMED: "CONFIRMED";
+        CREATED: "CREATED";
+        DELIVERED: "DELIVERED";
+        SHIPPED: "SHIPPED";
     }>;
     createdAt: z.ZodDate;
     items: z.ZodArray<z.ZodObject<{
@@ -67,7 +65,6 @@ export declare const myOrdersResponse: z.ZodArray<z.ZodObject<{
         orderId: z.ZodNumber;
         productId: z.ZodNumber;
         quantity: z.ZodNumber;
-        cartItemId: z.ZodNumber;
         price: z.ZodNumber;
         product: z.ZodObject<{
             id: z.ZodNumber;

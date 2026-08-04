@@ -11,7 +11,86 @@ import {
   // orderItemSchema,
   orderSchema,
 } from "./order.model.js";
+import { Prisma, Product } from "@repo/db/client";
+export type OrderItemInput = {
+  productId: number;
+  quantity: number;
+  product: Product;
+};
+export function validateAndCalculateTotal(items: OrderItemInput[]) {
+  if (items.length === 0) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "No items to checkout",
+    });
+  }
 
+  let total = 0;
+
+  for (const item of items) {
+    if (item.product.stock < item.quantity) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `${item.product.title} is out of stock`,
+      });
+    }
+
+    const price = Number(item.product.price);
+
+    const discount = item.product.discountPercentage ?? 0;
+
+    const discountedPrice = price - (price * discount) / 100;
+
+    total += discountedPrice * item.quantity;
+  }
+
+  return total;
+}
+export async function createOrder(
+  tx: Prisma.TransactionClient,
+  userId: number,
+  total: number,
+  items: OrderItemInput[],
+) {
+  const orderItems: Prisma.OrderItemUncheckedCreateWithoutOrderInput[] =
+    items.map((item) => {
+      const price = Number(item.product.price);
+
+      const discount = item.product.discountPercentage ?? 0;
+
+      const discountedPrice = price - (price * discount) / 100;
+
+      return {
+        productId: item.productId,
+        quantity: item.quantity,
+        price: discountedPrice,
+      };
+    });
+  return tx.order.create({
+    data: {
+      userId,
+
+      totalAmount: total,
+
+      paymentStatus: "PENDING",
+
+      orderStatus: "CREATED",
+
+      items: {
+        create: orderItems,
+      },
+    },
+  });
+}
+export async function createRazorpayOrder(orderId: number, total: number) {
+  return razorpay.orders.create({
+    amount: Math.round(total * 100),
+
+    currency: "INR",
+
+    receipt: `order_${orderId}`,
+  });
+}
 export const orderRouter = router({
   checkout: protectedProcedure
     .meta({
@@ -26,62 +105,29 @@ export const orderRouter = router({
     .input(z.object({ cartItemsIds: z.array(z.number()) }))
     .output(checkoutResponse)
     .mutation(async ({ ctx, input }) => {
-      let total = 0;
-      const order = await ctx.prisma.$transaction(async (tx) => {
+      const { order, total } = await ctx.prisma.$transaction(async (tx) => {
         const cartItems = await tx.cartItem.findMany({
           where: { userId: ctx.user.id, id: { in: input.cartItemsIds } },
           include: { product: true },
         });
 
-        if (cartItems.length === 0) {
+        if (!cartItems.length) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Cart is empty",
           });
         }
-
-        for (const item of cartItems) {
-          if (item.product.stock < item.quantity) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: `${item.product.title} out of stock`,
-            });
-          }
-
-          const price = Number(item.product.price);
-          const discountPercentage = item.product.discountPercentage ?? 0;
-
-          const discountedPrice = price - (price * discountPercentage) / 100;
-
-          total += discountedPrice * item.quantity;
-
-          total += price * item.quantity;
-        }
-
-        return tx.order.create({
-          data: {
-            userId: ctx.user.id,
-            totalAmount: total,
-            paymentStatus: "PENDING",
-            orderStatus: "CREATED",
-
-            items: {
-              create: cartItems.map((item) => {
-                const price = Number(item.product.price);
-                const discountPercentage = item.product.discountPercentage ?? 0;
-
-                const discountedPrice =
-                  price - (price * discountPercentage) / 100;
-                return {
-                  productId: item.productId,
-                  cartItemId: item.id,
-                  quantity: item.quantity,
-                  price: discountedPrice,
-                };
-              }),
-            },
-          },
-        });
+        const items: OrderItemInput[] = cartItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          product: item.product,
+        }));
+        const total = validateAndCalculateTotal(items);
+        const order = await createOrder(tx, ctx.user.id, total, items);
+        return {
+          order,
+          total,
+        };
       });
 
       // Create Razorpay order
@@ -104,6 +150,85 @@ export const orderRouter = router({
           message: "Razorpay key not configured",
         });
       }
+      return {
+        orderId: order.id,
+        razorpayOrderId: razorpayOrder.id,
+        amount: Number(razorpayOrder.amount),
+        currency: razorpayOrder.currency,
+        key,
+      };
+    }),
+  checkoutBuyNow: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/orders/buy-now",
+        tags: ["Order"],
+        summary: "Checkout buy now product",
+        description: "Create order and generate Razorpay order",
+      },
+    })
+    .input(
+      z.object({
+        productId: z.number(),
+        quantity: z.number().min(1).default(1),
+      }),
+    )
+    .output(checkoutResponse)
+
+    .mutation(async ({ ctx, input }) => {
+      const { order, total } = await ctx.prisma.$transaction(async (tx) => {
+        const product = await tx.product.findUnique({
+          where: {
+            id: input.productId,
+          },
+        });
+
+        if (!product) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Product not found",
+          });
+        }
+
+        const items: OrderItemInput[] = [
+          {
+            productId: product.id,
+            quantity: input.quantity,
+            product,
+          },
+        ];
+
+        const total = validateAndCalculateTotal(items);
+
+        const order = await createOrder(tx, ctx.user.id, total, items);
+
+        return {
+          order,
+          total,
+        };
+      });
+
+      const razorpayOrder = await createRazorpayOrder(order.id, total);
+
+      await ctx.prisma.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          paymentId: razorpayOrder.id,
+        },
+      });
+
+      const key = process.env.RAZORPAY_KEY_ID;
+
+      if (!key) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Razorpay key missing",
+        });
+      }
+
       return {
         orderId: order.id,
         razorpayOrderId: razorpayOrder.id,
@@ -205,4 +330,58 @@ export const orderRouter = router({
       },
     });
   }),
+  markOrderPaymentFailed: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/orders/cancelPayment",
+        tags: ["Orders"],
+        summary: "Cancel dismissed payment",
+      },
+    })
+    .input(
+      z.object({
+        orderId: z.number(),
+      }),
+    )
+    .output(
+      z.object({
+        success: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const order = await ctx.prisma.order.findFirst({
+        where: {
+          id: input.orderId,
+          userId: ctx.user.id,
+        },
+      });
+      if (!order) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Order not found",
+        });
+      }
+      // already processed
+      if (order.paymentStatus !== "PENDING") {
+        return {
+          success: false,
+        };
+      }
+      // prisma query for updating order status
+      const updated = await ctx.prisma.order.updateMany({
+        where: {
+          id: input.orderId,
+          userId: ctx.user.id,
+          paymentStatus: "PENDING",
+        },
+        data: {
+          paymentStatus: "FAILED",
+          orderStatus: "CANCELLED",
+        },
+      });
+      return {
+        success: updated.count > 0,
+      };
+    }),
 });

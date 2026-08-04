@@ -168,3 +168,17 @@ Turbo Repo
 ### dlx command in pnpm
 
 > is for dependecies which are not installed yet
+
+ <!-- Cd pipeline -->
+
+### Cd Workflow
+
+> Clone the repo
+> Dockerize it
+> Push it to docker hub
+> Pushed it to Ec2
+
+### Contenarising our application
+### Building image for dockere file
+
+docker build -t rewamp-mini-ecommerce .

@@ -1,16 +1,11 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist-types",
-    "skipLibCheck": true,
-
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    "declarationMap": false,
+    "outDir": "./dist-types",
+    "rootDir": "."
   },
-
-  "files": ["src/types.ts"]
+  "include": ["src/types.ts"]
 }

@@ -4,7 +4,7 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 
 interface ProductsPageClientProps {
-  initialData: ProductsOutput;
+  initialData?: ProductsOutput;
 }
 
 import Filters from "@/app/components/product/Filters";

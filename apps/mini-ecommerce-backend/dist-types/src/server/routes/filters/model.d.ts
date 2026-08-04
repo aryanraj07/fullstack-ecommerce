@@ -12,10 +12,10 @@ export declare const ratingRangeModel: z.ZodObject<{
 }, z.core.$strip>;
 export declare const attributesModel: z.ZodObject<{}, z.core.$catchall<z.ZodArray<z.ZodString>>>;
 export declare const sortOptionsModel: z.ZodArray<z.ZodEnum<{
+    newest: "newest";
     price_asc: "price_asc";
     price_desc: "price_desc";
     rating_desc: "rating_desc";
-    newest: "newest";
 }>>;
 export declare const getFilterDataOutput: z.ZodObject<{
     categories: z.ZodArray<z.ZodObject<{
@@ -39,10 +39,10 @@ export declare const getFilterDataOutput: z.ZodObject<{
     }, z.core.$strip>;
     attributes: z.ZodObject<{}, z.core.$catchall<z.ZodArray<z.ZodString>>>;
     sortOptions: z.ZodArray<z.ZodEnum<{
+        newest: "newest";
         price_asc: "price_asc";
         price_desc: "price_desc";
         rating_desc: "rating_desc";
-        newest: "newest";
     }>>;
 }, z.core.$strip>;
 export type FilterDataOutput = z.infer<typeof getFilterDataOutput>;

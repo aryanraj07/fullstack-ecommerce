@@ -54,7 +54,13 @@ const Summary = ({
         },
 
         modal: {
-          ondismiss: function () {
+          ondismiss: async () => {
+            const res = await trpcClient.order.markOrderPaymentFailed.mutate({
+              orderId: data.orderId,
+            });
+
+            console.log("res", res);
+
             router.push(`/orders/${data.orderId}`);
           },
         },
