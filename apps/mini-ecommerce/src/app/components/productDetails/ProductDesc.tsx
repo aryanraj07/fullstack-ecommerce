@@ -35,6 +35,8 @@ const ProductDesc = ({ product }: ProductDescProps) => {
   const [zoomStyle, setZoomStyle] = useState<CSSProperties>({});
   const discountedPrice =
     discountPercentage && price - (price * discountPercentage) / 100;
+  console.log("discountedPrice", discountedPrice);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
@@ -115,7 +117,7 @@ const ProductDesc = ({ product }: ProductDescProps) => {
         <div className="flex items-center gap-4">
           {discountedPrice && (
             <span className="text-3xl font-bold text-black">
-              ${discountedPrice.toFixed(2)}
+              &#8377;{discountedPrice.toFixed(2)}
             </span>
           )}
           <span className="text-lg line-through text-gray-400">${price}</span>

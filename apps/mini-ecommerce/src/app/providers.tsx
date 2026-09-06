@@ -75,7 +75,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         </Provider>
       </TRPCProvider>
       <ReactQueryDevtools initialIsOpen position="right" />
-      
     </QueryClientProvider>
   );
 }

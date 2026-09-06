@@ -23,6 +23,7 @@ process.on("uncaughtException", (err) => {
 process.on("unhandledRejection", (err) => {
   console.error("❌ Unhandled Rejection:", err);
 });
+
 let ssl;
 try {
   ssl = {
