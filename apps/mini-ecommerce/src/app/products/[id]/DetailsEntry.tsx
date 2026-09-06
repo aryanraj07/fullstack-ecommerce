@@ -14,6 +14,8 @@ const DetailsEntry = async ({
     trpc.products.getSingleProduct.query({ id }),
     trpc.products.getSimilarProducts.query({ productId: Number(id) }),
   ]);
+  console.log(data);
+
   return (
     <div className="max-w-7xl mx-auto p-6 ">
       <ProductDesc product={data.product} />

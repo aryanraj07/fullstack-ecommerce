@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { loadRazorpay } from "@/helpers/loadRazorpay";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckoutOutput, SummaryType } from "@/types/types";
-import { useTRPC, useTRPCClient } from "@/utils/trpc";
+import { useTRPCClient } from "@/utils/trpc";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

@@ -83,6 +83,8 @@ export async function createOrder(
   });
 }
 export async function createRazorpayOrder(orderId: number, total: number) {
+  console.log("Entering into razorpay creation of the product id ");
+
   return razorpay.orders.create({
     amount: Math.round(total * 100),
 
@@ -178,6 +180,8 @@ export const orderRouter = router({
 
     .mutation(async ({ ctx, input }) => {
       const { order, total } = await ctx.prisma.$transaction(async (tx) => {
+        console.log("🔵 Finding product:", input.productId);
+
         const product = await tx.product.findUnique({
           where: {
             id: input.productId,
@@ -190,6 +194,7 @@ export const orderRouter = router({
             message: "Product not found",
           });
         }
+        console.log("After finding the product ");
 
         const items: OrderItemInput[] = [
           {
@@ -208,18 +213,40 @@ export const orderRouter = router({
           total,
         };
       });
-
-      const razorpayOrder = await createRazorpayOrder(order.id, total);
-
-      await ctx.prisma.order.update({
-        where: {
-          id: order.id,
-        },
-        data: {
-          paymentId: razorpayOrder.id,
-        },
+      console.log("🟡 Before Razorpay", {
+        orderId: order.id,
+        total,
+        keyExists: !!process.env.RAZORPAY_KEY_ID,
+        secretExists: !!process.env.RAZORPAY_KEY_SECRET,
       });
+      let razorpayOrder;
+      try {
+        console.log("🟠 Calling Razorpay...");
 
+        razorpayOrder = await createRazorpayOrder(order.id, total);
+
+        console.log("🟢 Razorpay response:", razorpayOrder);
+
+        await ctx.prisma.order.update({
+          where: {
+            id: order.id,
+          },
+          data: {
+            paymentId: razorpayOrder.id,
+          },
+        });
+
+        console.log("🟢 DB paymentId updated");
+      } catch (error) {
+        console.error("🔴 RAZORPAY/ORDER ERROR:", error);
+
+        if (error instanceof Error) {
+          console.error("Message:", error.message);
+          console.error("Stack:", error.stack);
+        }
+
+        throw error;
+      }
       const key = process.env.RAZORPAY_KEY_ID;
 
       if (!key) {
